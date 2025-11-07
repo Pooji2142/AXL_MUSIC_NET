@@ -100,6 +100,10 @@
 // 	console.log("Server is running on port " + PORT);
 // 	connectDB();
 // });import express from "express";
+// ---------------------------
+// Imports
+// ---------------------------
+import express from "express";
 import dotenv from "dotenv";
 import { clerkMiddleware } from "@clerk/express";
 import fileUpload from "express-fileupload";
@@ -119,19 +123,18 @@ import songRoutes from "./routes/song.route.js";
 import albumRoutes from "./routes/album.route.js";
 import statRoutes from "./routes/stat.route.js";
 
+// ---------------------------
+// Config
+// ---------------------------
 dotenv.config();
-
 const __dirname = path.resolve();
 const app = express();
 const PORT = process.env.PORT || 5000; // dynamic port for Render
+const FRONTEND_URL = "https://axl-music-net.netlify.app"; // your frontend URL
 
 // ---------------------------
-// CORS + Socket.io
+// HTTP + Socket.io
 // ---------------------------
-
-// Your frontend Netlify URL
-const FRONTEND_URL = "https://axl-music-net.netlify.app";
-
 const httpServer = createServer(app);
 const io = new SocketIOServer(httpServer, {
   cors: {
@@ -142,17 +145,10 @@ const io = new SocketIOServer(httpServer, {
 initializeSocket(io);
 app.set("io", io);
 
-// CORS for API requests
-app.use(
-  cors({
-    origin: FRONTEND_URL,
-    credentials: true,
-  })
-);
-
 // ---------------------------
 // Middleware
 // ---------------------------
+app.use(cors({ origin: FRONTEND_URL, credentials: true }));
 app.use(express.json());
 app.use(clerkMiddleware());
 app.use(
@@ -165,7 +161,7 @@ app.use(
 );
 
 // ---------------------------
-// Cron job to clean tmp folder
+// Cron job to clean tmp folder every hour
 // ---------------------------
 const tempDir = path.join(process.cwd(), "tmp");
 cron.schedule("0 * * * *", () => {
@@ -191,9 +187,7 @@ app.use("/api/stats", statRoutes);
 // Root route
 // ---------------------------
 app.get("/", (req, res) => {
-  res.send(
-    "🎶 AXL Music backend is running successfully on Render 🚀"
-  );
+  res.send("🎶 AXL Music backend is running successfully on Render 🚀");
 });
 
 // ---------------------------
@@ -209,10 +203,9 @@ app.use((err, req, res, next) => {
 });
 
 // ---------------------------
-// Start server + connect DB
+// Start server + connect to DB
 // ---------------------------
 httpServer.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
   connectDB();
 });
-
