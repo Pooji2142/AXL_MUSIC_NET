@@ -89,8 +89,7 @@ if (process.env.NODE_ENV === "production") {
 app.get('/', (req, res) => {
   res.send('🎶 AXL Music backend is running successfully on Vercel 🚀');
 });
-
-// error handler
+// error handler thing
 app.use((err, req, res, next) => {
 	res.status(500).json({ message: process.env.NODE_ENV === "production" ? "Internal server error" : err.message });
 });
