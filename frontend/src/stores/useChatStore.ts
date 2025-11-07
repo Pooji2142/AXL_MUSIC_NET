@@ -47,7 +47,7 @@ interface ChatStore {
 	setReplyTo: (message: Message | null) => void;
 }
 
-const baseURL = import.meta.env.MODE === "development" ? "http://localhost:5000" : "/";
+const baseURL = import.meta.env.MODE === "development" ? "https://axl-music-net-khaki.vercel.app" : "/";
 
 const socket = io(baseURL, {
 	autoConnect: false, // only connect if user is authenticated

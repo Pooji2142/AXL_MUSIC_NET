@@ -28,7 +28,8 @@ const PORT = process.env.PORT;
 const httpServer = createServer(app);
 const io = new SocketIOServer(httpServer, {
 	cors: {
-		origin: "http://localhost:3000",
+		// origin: "http://localhost:3000",
+		origin:"https://axl-music-net.netlify.app",
 		credentials: true,
 	},
 });
@@ -39,7 +40,8 @@ app.set('io', io);
 
 app.use(
 	cors({
-		origin: "http://localhost:3000",
+		// origin: "http://localhost:3000",
+		origin: "https://axl-music-net.netlify.app",
 		credentials: true,
 	})
 );
